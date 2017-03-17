@@ -12,6 +12,7 @@ component
 		String appID,
 		String appKey,
 		String appSecret,
+		String appCluster,
 		Any crypto
 		){
 
@@ -19,6 +20,7 @@ component
 		variables.appID = appID;
 		variables.appKey = appKey;
 		variables.appSecret = appSecret;
+		variables.appCluster = lcase(appCluster);
 		variables.crypto = crypto;
 
 		// Return this object reference.
@@ -181,7 +183,7 @@ component
 		// Build the HTTP request.
 		var httpRequest = new HTTP(
 			method = "post",
-			url = ("http://api.pusherapp.com" & resourceUri),
+			url = ("http://" & getApiEndpoint() & resourceUri),
 			charset = "utf-8"
 		);
 
@@ -249,6 +251,25 @@ component
 		return( response );
 
 	}
+
+	private String function getApiEndpoint() {
+		var endPoint = "";
+		switch(variables.appCluster) {
+			case "ap1":
+				endPoint = "api-ap1.pusher.com";
+				break;
+			case "ap2":
+				endPoint = "api-ap2.pusher.com";
+				break;
+			case "eu":
+				endPoint = "api-eu.pusher.com";
+				break;
+			default:
+				endPoint = "api.pusherapp.com";
+				break;
+		}
+		return endPoint;
+	} 
 
 
 }
